@@ -12,6 +12,7 @@ import Root from './Root/Root';
 import Home from './Home/Home';
 import Middledetails from './Components/MiddleDEtails/Middledetails';
 import Statics from './Components/Static/Statics';
+import  Donation  from './Components/Donation/Donation';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path:'/statics',
         element:<Statics></Statics>
+      },
+      {
+        path:'/donation',
+        element:<Donation></Donation>
       }
     ]
   },

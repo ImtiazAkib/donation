@@ -1,26 +1,66 @@
+import { PieChart, Pie, Cell } from "recharts";
+import { getStoredDonation } from "../localstorage";
 
 
-import { useEffect, useState } from 'react';
-import { PieChart, Pie} from 'recharts';
-const Statics = () => {
-    const [data,Setdata] = useState([])
+let total= 100;
+let donation=0;
+const items=getStoredDonation();
+donation=(items.length)*8.33;
+    total=total-donation;
 
-    useEffect(() => {
-        fetch('data.json')
-        .then(res => res.json())
-        .then(data => data(Setdata))
-    },[])
-    return (
-        <div>
+const data = [
+  { name: "Total Donatons", value: total },
+  { name: "My Donations", value: donation },
+];
 
-<PieChart width={1000} height={400}>
-          <Pie data={data.health} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#8884d8" />
-          <Pie data={data.food} dataKey="value" cx="50%" cy="50%" innerRadius={70} outerRadius={90} fill="#82ca9d" label />
-        </PieChart>
 
-            
-        </div>
-    );
+
+const COLORS = ["#0088FE", "#00C49F"];
+
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  
+}) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
 };
-
-export default Statics;
+export default function Statics() {
+  
+  return (
+    <PieChart width={400} height={400}>
+      <Pie
+        data={data}
+        cx={200}
+        cy={200}
+        labelLine={false}
+        label={renderCustomizedLabel}
+        outerRadius={80}
+        fill="#8884d8"
+        dataKey="value"
+      >
+        {data.map((data, index) => (
+          <Cell key={data._ID} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Pie>
+    </PieChart>
+  );
+}
